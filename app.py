@@ -4,9 +4,12 @@ import re
 import json
 from flask import Flask
 from flask_cors import CORS
+from datetime import datetime
 
 app = Flask(__name__)
 CORS(app)
+
+current_crossword = {"date": "Bruhurary -1 3000"}
 
 def get_crossword():
     response = requests.get("https://dazepuzzle.com/nyt-mini-crossword/")
@@ -40,9 +43,11 @@ def get_crossword():
     down_dict = {key[:-1]: value.replace(" Crossword Clue", "") for key, value in down_dict.items()}
     across_dict = {key: value for key, value in all_dict.items() if not str(key).endswith('D')}
     across_dict = {key[:-1]: value.replace(" Crossword Clue", "") for key, value in across_dict.items()}
-    # print(down_dict)
+    text = soup.find("div", id='tab_hints').find('h3').get_text()
+    text = " ".join(text.split()[-4:-1])
+    # print(text)
     # print(across_dict)
-    json_dict = json.dumps({"title": "NYT Mini Crossword", "solution": grid, "across": across_dict, "down": down_dict, "message": "Good job!"})
+    json_dict = json.dumps({"title": "NYT Mini Crossword", "date": text, "solution": grid, "across": across_dict, "down": down_dict, "message": "Good job!"})
     return json_dict
 
 
@@ -52,12 +57,18 @@ def get_crossword():
 @app.route('/')
 # ‘/’ URL is bound with hello_world() function.
 def hello_world():
-    return 'Hello World'
+    return 'Hello World 2'
 
 @app.route('/crossword')
 def hello_name():
-   return get_crossword()
+    global current_crossword
+    day = current_crossword["date"].split()[1]
+    print(day, datetime.today().day)
+    if int(day) < datetime.today().day:
+        current_crossword = json.loads(get_crossword())
+    return current_crossword
+
 
 # main driver function
 if __name__ == '__main__':
-    app.run()
+    app.run(host="0.0.0.0", port=5001, debug=True)
