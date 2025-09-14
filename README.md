@@ -1,3 +1,4 @@
-<img width="1508" height="796" alt="image" src="https://github.com/user-attachments/assets/0db96564-3567-4f9a-b3e9-6a27c2680869" />
+<img width="1498" height="799" alt="image" src="https://github.com/user-attachments/assets/e07ea144-0784-4942-b4a4-8265da91e7b9" />
+
 
 Play the NYT Mini Crossword for free!
